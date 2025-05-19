@@ -28,9 +28,21 @@
                   CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
 
-                            <Label
-                Text="{Binding Name}"
-                FontSize="16" />
+                            <Label FontSize="16">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Country}" FontAttributes="Bold"/>
+                                        <Span Text=", "/>
+                                        <Span Text="{Binding Hotel}"/>
+                                        <Span Text=", "/>
+                                        <Span Text="{Binding DurationWeeks}"/>
+                                        <Span Text=" нед."/>
+                                        <Span Text=", "/>
+                                        <Span Text="{Binding Price, StringFormat='{}{0:C}'}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
                         </Grid>
                     </Frame>
                 </DataTemplate>

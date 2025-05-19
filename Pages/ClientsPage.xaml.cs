@@ -1,20 +1,22 @@
 ﻿using Microsoft.Maui.Controls;
-using TouristApp.Data;
 using TouristApp.ViewModels;
 
 namespace TouristApp.Views
 {
     public partial class ClientsPage : ContentPage
     {
-        public ClientsPage()
+        public ClientsPage(ClientsViewModel viewModel)
         {
             InitializeComponent();
+            BindingContext = viewModel;
+        }
 
-            var dbService = DependencyService.Get<DatabaseService>();
-
-            BindingContext = new ClientsViewModel(dbService);
-
-            ((ClientsViewModel)BindingContext).LoadClientsCommand.Execute(null);
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ((ClientsViewModel)BindingContext)
+                .LoadClientsCommand
+                .Execute(null);
         }
     }
 }

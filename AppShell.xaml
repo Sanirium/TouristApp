@@ -19,7 +19,7 @@
       ContentTemplate="{DataTemplate views:RoutesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Ваучеры" Icon="vouchers.png">
+    <FlyoutItem Title="Путевки" Icon="vouchers.png">
         <ShellContent
       Title="Список"
       Route="Vouchers"

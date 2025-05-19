@@ -3,21 +3,43 @@
     x:Class="TouristApp.Views.ClientsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:viewmodels="clr-namespace:TouristApp.ViewModels">
+    Title="Клиенты">
 
-    <CollectionView ItemsSource="{Binding Clients}">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Grid Padding="10">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer
-              Command="{Binding EditClientCommand}"
-              CommandParameter="{Binding .}" />
-                    </Grid.GestureRecognizers>
-                    <Label Text="{Binding Name}" FontSize="16" />
-                </Grid>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+    <VerticalStackLayout Padding="20" Spacing="15">
 
+        <Button
+      Text="Добавить клиента"
+      Command="{Binding AddClientCommand}"
+      HorizontalOptions="Center" />
+
+        <CollectionView ItemsSource="{Binding Clients}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5" Padding="10" HasShadow="True" CornerRadius="8">
+                        <Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                  Command="{Binding BindingContext.EditClientCommand, 
+                                    Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                  CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+
+                            <Label FontSize="16">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding LastName}" FontAttributes="Bold"/>
+                                        <Span Text=" "/>
+                                        <Span Text="{Binding FirstName}"/>
+                                        <Span Text=" "/>
+                                        <Span Text="{Binding MiddleName}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
 </ContentPage>

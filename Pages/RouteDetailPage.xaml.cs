@@ -1,5 +1,4 @@
 ﻿using Microsoft.Maui.Controls;
-using TouristApp.Data;
 using TouristApp.ViewModels;
 
 namespace TouristApp.Views
@@ -7,24 +6,16 @@ namespace TouristApp.Views
     [QueryProperty(nameof(RouteId), "routeId")]
     public partial class RouteDetailPage : ContentPage
     {
-        public int RouteId { get; set; }
-
-        public RouteDetailPage()
+        public int RouteId
         {
-            InitializeComponent();
-
-            var dbService = DependencyService.Get<DatabaseService>();
-            BindingContext = new RouteDetailViewModel(dbService);
+            get => ((RouteDetailViewModel)BindingContext).RouteId;
+            set => ((RouteDetailViewModel)BindingContext).RouteId = value;
         }
 
-        protected override void OnAppearing()
+        public RouteDetailPage(RouteDetailViewModel viewModel)
         {
-            base.OnAppearing();
-
-            if (BindingContext is RouteDetailViewModel vm)
-            {
-                vm.RouteId = RouteId;
-            }
+            InitializeComponent();
+            BindingContext = viewModel;
         }
     }
 }

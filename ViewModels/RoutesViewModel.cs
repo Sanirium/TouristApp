@@ -5,14 +5,16 @@ using TouristApp.Data;
 using TouristApp.Helpers;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using TouristApp.Views;
 
 namespace TouristApp.ViewModels
 {
     public class RoutesViewModel : BaseViewModel
     {
-
         private readonly DatabaseService _db;
+
         public ObservableCollection<Route> Routes { get; } = new ObservableCollection<Route>();
+
         public ICommand LoadRoutesCommand { get; }
         public ICommand AddRouteCommand { get; }
         public ICommand EditRouteCommand { get; }
@@ -21,17 +23,25 @@ namespace TouristApp.ViewModels
         public RoutesViewModel(DatabaseService db)
         {
             _db = db;
-            Routes = new ObservableCollection<Route>();
-            LoadRoutesCommand = new RelayCommand(async _ => await LoadRoutes());
-            AddRouteCommand = new RelayCommand(_ => Shell.Current.GoToAsync("/RouteDetail"));
-            EditRouteCommand = new RelayCommand(async r => await Shell.Current.GoToAsync($"/RouteDetail?routeId={((Route)r).Id}"));
-            DeleteRouteCommand = new RelayCommand(async r => {
-                await _db.DeleteRouteAsync((Route)r);
-                await LoadRoutes();
+
+            LoadRoutesCommand = new Command(async () => await LoadRoutesAsync());
+
+            AddRouteCommand = new Command(async () =>
+                await Shell.Current.GoToAsync(nameof(RouteDetailPage))
+            );
+
+            EditRouteCommand = new Command<Route>(async route =>
+                await Shell.Current.GoToAsync($"{nameof(RouteDetailPage)}?routeId={route.Id}")
+            );
+
+            DeleteRouteCommand = new Command<Route>(async route =>
+            {
+                await _db.DeleteRouteAsync(route);
+                await LoadRoutesAsync();
             });
         }
 
-        public async Task LoadRoutes()
+        private async Task LoadRoutesAsync()
         {
             Routes.Clear();
             var list = await _db.GetRoutesAsync();

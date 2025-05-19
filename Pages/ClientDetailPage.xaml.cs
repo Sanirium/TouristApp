@@ -7,24 +7,16 @@ namespace TouristApp.Views
     [QueryProperty(nameof(ClientId), "clientId")]
     public partial class ClientDetailPage : ContentPage
     {
-        public int ClientId { get; set; }
-
-        public ClientDetailPage()
+        public int ClientId
         {
-            InitializeComponent();
-
-            var dbService = DependencyService.Get<DatabaseService>();
-            BindingContext = new ClientDetailViewModel(dbService);
+            get => ((ClientDetailViewModel)BindingContext).ClientId;
+            set => ((ClientDetailViewModel)BindingContext).ClientId = value;
         }
 
-        protected override void OnAppearing()
+        public ClientDetailPage(ClientDetailViewModel viewModel)
         {
-            base.OnAppearing();
-
-            if (BindingContext is ClientDetailViewModel vm)
-            {
-                vm.ClientId = ClientId;
-            }
+            InitializeComponent();
+            BindingContext = viewModel;
         }
     }
 }

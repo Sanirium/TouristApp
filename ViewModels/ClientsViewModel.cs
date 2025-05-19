@@ -5,13 +5,16 @@ using TouristApp.Data;
 using TouristApp.Helpers;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using TouristApp.Views;
 
 namespace TouristApp.ViewModels
 {
     public class ClientsViewModel : BaseViewModel
     {
         private readonly DatabaseService _db;
-        public ObservableCollection<Client> Clients { get; }
+
+        public ObservableCollection<Client> Clients { get; } = new ObservableCollection<Client>();
+
         public ICommand LoadClientsCommand { get; }
         public ICommand AddClientCommand { get; }
         public ICommand EditClientCommand { get; }
@@ -20,17 +23,27 @@ namespace TouristApp.ViewModels
         public ClientsViewModel(DatabaseService db)
         {
             _db = db;
-            Clients = new ObservableCollection<Client>();
-            LoadClientsCommand = new RelayCommand(async _ => await LoadClients());
-            AddClientCommand = new RelayCommand(_ => Shell.Current.GoToAsync("/ClientDetail"));
-            EditClientCommand = new RelayCommand(async c => await Shell.Current.GoToAsync($"/ClientDetail?clientId={((Client)c).Id}"));
-            DeleteClientCommand = new RelayCommand(async c => {
-                await _db.DeleteClientAsync((Client)c);
-                await LoadClients();
+
+            LoadClientsCommand = new Command(async () => await LoadClientsAsync());
+
+            AddClientCommand = new Command(async () =>
+                await Shell.Current.GoToAsync(nameof(ClientDetailPage))
+            );
+
+            EditClientCommand = new Command<Client>(async client =>
+                await Shell.Current.GoToAsync(
+                    $"{nameof(ClientDetailPage)}?clientId={client.Id}"
+                )
+            );
+
+            DeleteClientCommand = new Command<Client>(async client =>
+            {
+                await _db.DeleteClientAsync(client);
+                await LoadClientsAsync();
             });
         }
 
-        public async Task LoadClients()
+        private async Task LoadClientsAsync()
         {
             Clients.Clear();
             var list = await _db.GetClientsAsync();

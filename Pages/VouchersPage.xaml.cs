@@ -1,28 +1,23 @@
-﻿using Microsoft.Maui.Controls;
-using TouristApp.Data;
+﻿
+using Microsoft.Maui.Controls;
 using TouristApp.ViewModels;
 
 namespace TouristApp.Views
 {
     public partial class VouchersPage : ContentPage
     {
-        public VouchersPage()
+        public VouchersPage(VouchersViewModel viewModel)
         {
             InitializeComponent();
-
-            var dbService = DependencyService.Get<DatabaseService>();
-            var vm = new VouchersViewModel(dbService);
-            BindingContext = vm;
+            BindingContext = viewModel;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            if (BindingContext is VouchersViewModel vm)
-            {
-                vm.LoadVouchersCommand.Execute(null);
-            }
+            ((VouchersViewModel)BindingContext)
+                .LoadVouchersCommand
+                .Execute(null);
         }
     }
 }

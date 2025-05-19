@@ -1,5 +1,4 @@
 ﻿using Microsoft.Maui.Controls;
-using TouristApp.Data;
 using TouristApp.ViewModels;
 
 namespace TouristApp.Views
@@ -7,22 +6,16 @@ namespace TouristApp.Views
     [QueryProperty(nameof(VoucherId), "voucherId")]
     public partial class VoucherDetailPage : ContentPage
     {
-        public int VoucherId { get; set; }
-
-        public VoucherDetailPage()
+        public int VoucherId
         {
-            InitializeComponent();
-
-            var dbService = DependencyService.Get<DatabaseService>();
-            BindingContext = new VoucherDetailViewModel(dbService);
+            get => ((VoucherDetailViewModel)BindingContext).VoucherId;
+            set => ((VoucherDetailViewModel)BindingContext).VoucherId = value;
         }
 
-        protected override void OnAppearing()
+        public VoucherDetailPage(VoucherDetailViewModel viewModel)
         {
-            base.OnAppearing();
-
-            if (BindingContext is VoucherDetailViewModel vm)
-                vm.VoucherId = VoucherId;
+            InitializeComponent();
+            BindingContext = viewModel;
         }
     }
 }

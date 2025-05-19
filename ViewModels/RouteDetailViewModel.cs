@@ -14,15 +14,6 @@ namespace TouristApp.ViewModels
     {
         private readonly DatabaseService _db;
         private int _routeId;
-        public int RouteId
-        {
-            get => _routeId;
-            set
-            {
-                _routeId = value;
-                _ = LoadRoute();
-            }
-        }
 
         private Route _route;
         public Route Route
@@ -30,27 +21,58 @@ namespace TouristApp.ViewModels
             get => _route;
             set => SetProperty(ref _route, value);
         }
+
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         public RouteDetailViewModel(DatabaseService db)
         {
             _db = db;
             Route = new Route();
-            SaveCommand = new RelayCommand(async _ => await Save());
-            CancelCommand = new RelayCommand(_ => Shell.Current.GoToAsync(".."));
+
+            SaveCommand = new Command(async () => await Save());
+            CancelCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
+            DeleteCommand = new Command(async () => await Delete());
+        }
+
+        public int RouteId
+        {
+            get => _routeId;
+            set
+            {
+                if (SetProperty(ref _routeId, value))
+                {
+                    LoadRoute();
+                }
+            }
         }
 
         private async Task LoadRoute()
         {
-            if (RouteId == 0) return;
-            Route = await _db.GetRouteAsync(RouteId) ?? new Route();
+            if (RouteId == 0)
+            {
+                Route = new Route();
+            }
+            else
+            {
+                Route = await _db.GetRouteAsync(RouteId) ?? new Route();
+            }
         }
 
         private async Task Save()
         {
             await _db.SaveRouteAsync(Route);
-            await Shell.Current.GoToAsync("//Routes");
+            await Shell.Current.GoToAsync("..");
+        }
+
+        private async Task Delete()
+        {
+            if (Route?.Id > 0)
+            {
+                await _db.DeleteRouteAsync(Route);
+            }
+            await Shell.Current.GoToAsync("..");
         }
     }
 }

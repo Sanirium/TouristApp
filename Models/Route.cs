@@ -15,4 +15,7 @@ public class Route
     public string Hotel { get; set; }
 
     public decimal Price { get; set; }
+
+    [Ignore]
+    public string DisplayName => $"{Country}, {Hotel}, {DurationWeeks} нед.";
 }

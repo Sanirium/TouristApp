@@ -4,18 +4,19 @@ namespace TouristApp
 {
     public partial class App : Application
     {
+        readonly DatabaseService _db;
+
         public App(DatabaseService db)
         {
             InitializeComponent();
-
-            db.InitializeAsync().Wait();
-
+            _db = db;
             MainPage = new AppShell();
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
+        protected override void OnStart()
         {
-            return new Window(new AppShell());
+            _ = _db.InitializeAsync();
         }
     }
+
 }
