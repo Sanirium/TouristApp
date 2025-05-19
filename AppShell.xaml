@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell
+    x:Class="TouristApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:TouristApp.Views">
+
+    <FlyoutItem Title="Клиенты" Icon="clients.png">
+        <ShellContent
+      Title="Список"
+      Route="Clients"
+      ContentTemplate="{DataTemplate views:ClientsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Маршруты" Icon="routes.png">
+        <ShellContent
+      Title="Список"
+      Route="Routes"
+      ContentTemplate="{DataTemplate views:RoutesPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Ваучеры" Icon="vouchers.png">
+        <ShellContent
+      Title="Список"
+      Route="Vouchers"
+      ContentTemplate="{DataTemplate views:VouchersPage}" />
+    </FlyoutItem>
+
+</Shell>

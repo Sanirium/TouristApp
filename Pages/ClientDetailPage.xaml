@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TouristApp.Views.ClientDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Детали клиента">
+
+    <ScrollView>
+        <VerticalStackLayout
+        Padding="20"
+        Spacing="15">
+
+            <Label Text="Имя" 
+             FontAttributes="Bold" />
+            <Entry Text="{Binding Client.Name}"
+             Placeholder="Введите имя" />
+
+            <Label Text="Email"
+             FontAttributes="Bold" />
+            <Entry Text="{Binding Client.Email}"
+             Placeholder="Введите email"
+             Keyboard="Email" />
+
+            <Label Text="Телефон"
+             FontAttributes="Bold" />
+            <Entry Text="{Binding Client.Phone}"
+             Placeholder="Введите телефон"
+             Keyboard="Telephone" />
+
+            <Label Text="Адрес"
+             FontAttributes="Bold" />
+            <Editor Text="{Binding Client.Address}"
+              AutoSize="TextChanges"
+              Placeholder="Введите адрес" />
+
+            <HorizontalStackLayout Spacing="10"
+                              HorizontalOptions="Center">
+                <Button Text="Сохранить"
+                Command="{Binding SaveCommand}"
+                WidthRequest="120" />
+                <Button Text="Отмена"
+                Command="{Binding CancelCommand}"
+                WidthRequest="120" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
