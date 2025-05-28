@@ -21,9 +21,11 @@ public class Voucher
     public string ClientFullName { get; set; }
 
     [SQLite.Ignore]
-    public string RouteCountry { get; set; }
+    public string RouteDisplayName { get; set; }
 
     [SQLite.Ignore]
-    public string DisplayInfo =>
-            $"{ClientFullName}, {RouteCountry} {DepartureDate:dd.MM.yyyy}, {Quantity} шт., скидка {DiscountPercent}%";
+    public decimal RoutePrice { get; set; }
+
+    [SQLite.Ignore]
+    public decimal TotalPrice => Math.Round(RoutePrice * Quantity * (1 - DiscountPercent / 100m), 2);
 }
