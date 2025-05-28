@@ -8,21 +8,39 @@
     <VerticalStackLayout Padding="20" Spacing="15">
 
         <Button
-            Text="Добавить клиента"
-            Command="{Binding AddClientCommand}"
-            HorizontalOptions="Center" />
+      Text="Добавить клиента"
+      Command="{Binding AddClientCommand}"
+      HorizontalOptions="Center" />
 
         <SearchBar
-            Placeholder="Поиск клиента..."
-            Text="{Binding FilterText}"
-            SearchCommand="{Binding ApplyFilterCommand}"
-            SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}"
-            />
+      Placeholder="Поиск клиента..."
+      Text="{Binding FilterText}"
+      SearchCommand="{Binding ApplyFilterCommand}"
+      SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}" />
 
-        <CollectionView ItemsSource="{Binding FilteredClients}">
+        <CollectionView
+      ItemsSource="{Binding FilteredClients}"
+      Margin="0,10,0,0">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="5" Padding="10" HasShadow="True" CornerRadius="8">
+                    <Frame
+            Margin="5"
+            Padding="10"
+            HasShadow="True"
+            CornerRadius="8">
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                Command="{Binding BindingContext.EditClientCommand,
+                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+
                         <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
 
                             <Label Grid.Row="0" FontSize="16">
@@ -37,9 +55,10 @@
                                 </Label.FormattedText>
                             </Label>
 
-                            <Label Grid.Row="1"
-                               Text="{Binding Phone}"
-                               FontSize="14" />
+                            <Label
+                Grid.Row="1"
+                Text="{Binding Phone}"
+                FontSize="14" />
 
                         </Grid>
                     </Frame>

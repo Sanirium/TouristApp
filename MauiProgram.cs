@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using TouristApp.Data;
+using TouristApp.Helpers;
 using TouristApp.ViewModels;
 using TouristApp.Views;
 
@@ -18,6 +19,7 @@ namespace TouristApp
                 });
 
             builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddSingleton<IDiscountPolicy, BulkDiscountPolicy>();
 
             builder.Services.AddTransient<ClientDetailViewModel>();
             builder.Services.AddTransient<RouteDetailViewModel>();

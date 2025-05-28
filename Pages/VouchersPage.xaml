@@ -14,19 +14,16 @@
 
         <ScrollView Orientation="Horizontal">
             <HorizontalStackLayout Spacing="10" Padding="0,10">
-
                 <Picker
           Title="Клиент"
           WidthRequest="180"
           ItemsSource="{Binding ClientList}"
           SelectedItem="{Binding FilterClient}" />
-
                 <Picker
           Title="Маршрут"
           WidthRequest="180"
           ItemsSource="{Binding RouteList}"
           SelectedItem="{Binding FilterRoute}" />
-
             </HorizontalStackLayout>
         </ScrollView>
 
@@ -34,12 +31,10 @@
             <DatePicker
         Date="{Binding FilterFromDate, Mode=TwoWay}"
         MaximumDate="{Binding FilterToDate}"
-        VerticalOptions="Center"
         WidthRequest="150" />
             <DatePicker
         Date="{Binding FilterToDate, Mode=TwoWay}"
         MinimumDate="{Binding FilterFromDate}"
-        VerticalOptions="Center"
         WidthRequest="150" />
         </HorizontalStackLayout>
 
@@ -74,6 +69,7 @@
         <CollectionView
       ItemsSource="{Binding FilteredVouchers}"
       Margin="0,10,0,0">
+
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout
           Orientation="Vertical"
@@ -82,7 +78,19 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="5" Padding="10" HasShadow="True" CornerRadius="8">
+                    <Frame
+            Margin="5"
+            Padding="10"
+            HasShadow="True"
+            CornerRadius="8">
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                Command="{Binding BindingContext.EditVoucherCommand, 
+                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+
                         <VerticalStackLayout Spacing="4">
                             <Label FontSize="16">
                                 <Label.FormattedText>
@@ -113,7 +121,7 @@
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-        </CollectionView>
 
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>

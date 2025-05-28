@@ -14,39 +14,20 @@ namespace TouristApp.ViewModels
     public class VoucherDetailViewModel : BaseViewModel
     {
         private readonly DatabaseService _db;
+        private readonly IDiscountPolicy _discountPolicy;
         private int _voucherId;
 
         public ObservableCollection<Client> AllClients { get; } = new ObservableCollection<Client>();
         public ObservableCollection<Route> AllRoutes { get; } = new ObservableCollection<Route>();
 
-        private Client _selectedClient;
-        public Client SelectedClient
-        {
-            get => _selectedClient;
-            set => SetProperty(ref _selectedClient, value);
-        }
-
-        private Route _selectedRoute;
-        public Route SelectedRoute
-        {
-            get => _selectedRoute;
-            set => SetProperty(ref _selectedRoute, value);
-        }
-
-        private Voucher _voucher = new Voucher { DepartureDate = DateTime.Today };
-        public Voucher Voucher
-        {
-            get => _voucher;
-            set => SetProperty(ref _voucher, value);
-        }
-
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
         public ICommand DeleteCommand { get; }
 
-        public VoucherDetailViewModel(DatabaseService db)
+        public VoucherDetailViewModel(DatabaseService db, IDiscountPolicy discountPolicy)
         {
             _db = db;
+            _discountPolicy = discountPolicy;
 
             SaveCommand = new Command(async () => await Save());
             CancelCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
@@ -65,6 +46,85 @@ namespace TouristApp.ViewModels
             }
         }
 
+        private Voucher _voucher = new Voucher { DepartureDate = DateTime.Today };
+        public Voucher Voucher
+        {
+            get => _voucher;
+            set
+            {
+                if (SetProperty(ref _voucher, value))
+                {
+                    _quantityText = Voucher.Quantity.ToString();
+                    _discountText = (Voucher.DiscountPercent * 100).ToString();
+                    OnPropertyChanged(nameof(QuantityText));
+                    OnPropertyChanged(nameof(DiscountText));
+                }
+            }
+        }
+
+        private Client _selectedClient;
+        public Client SelectedClient
+        {
+            get => _selectedClient;
+            set
+            {
+                if (SetProperty(ref _selectedClient, value) && value != null)
+                    Voucher.ClientId = value.Id;
+            }
+        }
+
+        private Route _selectedRoute;
+        public Route SelectedRoute
+        {
+            get => _selectedRoute;
+            set
+            {
+                if (SetProperty(ref _selectedRoute, value) && value != null)
+                {
+                    Voucher.RouteId = value.Id;
+                    Voucher.RoutePrice = value.Price;
+                    OnPropertyChanged(nameof(Voucher.RoutePrice));
+                }
+            }
+        }
+
+        private string _quantityText;
+        public string QuantityText
+        {
+            get => _quantityText;
+            set
+            {
+                if (SetProperty(ref _quantityText, value))
+                {
+                    if (int.TryParse(value, out var q))
+                    {
+                        Voucher.Quantity = q;
+                        var pct = _discountPolicy.GetDiscountPercent(q);
+                        Voucher.DiscountPercent = pct;
+                        _discountText = (pct * 100).ToString();
+                        OnPropertyChanged(nameof(DiscountText));
+                    }
+                }
+            }
+        }
+
+        private string _discountText;
+        public string DiscountText
+        {
+            get => _discountText;
+            set
+            {
+                if (SetProperty(ref _discountText, value))
+                {
+                    if (decimal.TryParse(value, out var pct100))
+                    {
+                        Voucher.DiscountPercent = pct100 / 100m;
+                        OnPropertyChanged(nameof(Voucher.DiscountPercent));
+                    }
+                }
+            }
+        }
+
         private async Task InitializeAsync()
         {
             await LoadLookupsAsync();
@@ -75,12 +135,12 @@ namespace TouristApp.ViewModels
         {
             var clients = await _db.GetClientsAsync();
             AllClients.Clear();
-            foreach (var c in clients)
+            foreach (var c in clients.OrderBy(x => x.FullName))
                 AllClients.Add(c);
 
             var routes = await _db.GetRoutesAsync();
             AllRoutes.Clear();
-            foreach (var r in routes)
+            foreach (var r in routes.OrderBy(x => x.DisplayName))
                 AllRoutes.Add(r);
         }
 
@@ -92,19 +152,16 @@ namespace TouristApp.ViewModels
             }
             else
             {
-                Voucher = await _db.GetVoucherAsync(VoucherId)
-                          ?? new Voucher { DepartureDate = DateTime.Today };
-
-                SelectedClient = AllClients.FirstOrDefault(c => c.Id == Voucher.ClientId);
-                SelectedRoute = AllRoutes.FirstOrDefault(r => r.Id == Voucher.RouteId);
+                var v = await _db.GetVoucherAsync(VoucherId)
+                        ?? new Voucher { DepartureDate = DateTime.Today };
+                Voucher = v;
+                SelectedClient = AllClients.FirstOrDefault(c => c.Id == v.ClientId);
+                SelectedRoute = AllRoutes.FirstOrDefault(r => r.Id == v.RouteId);
             }
         }
 
         private async Task Save()
         {
-            if (SelectedClient != null) Voucher.ClientId = SelectedClient.Id;
-            if (SelectedRoute != null) Voucher.RouteId = SelectedRoute.Id;
-
             await _db.SaveVoucherAsync(Voucher);
             await Shell.Current.GoToAsync("..");
         }
@@ -112,9 +169,7 @@ namespace TouristApp.ViewModels
         private async Task Delete()
         {
             if (Voucher?.Id > 0)
-            {
                 await _db.DeleteVoucherAsync(Voucher);
-            }
             await Shell.Current.GoToAsync("..");
         }
     }
