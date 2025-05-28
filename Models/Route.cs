@@ -16,6 +16,6 @@ public class Route
 
     public decimal Price { get; set; }
 
-    [Ignore]
+    [SQLite.Ignore]
     public string DisplayName => $"{Country}, {Hotel}, {DurationWeeks} нед.";
 }

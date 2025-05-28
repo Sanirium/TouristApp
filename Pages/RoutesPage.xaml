@@ -12,23 +12,69 @@
       Command="{Binding AddRouteCommand}"
       HorizontalOptions="Center" />
 
-        <CollectionView ItemsSource="{Binding Routes}">
+        <ScrollView Orientation="Horizontal">
+            <HorizontalStackLayout Spacing="10" Padding="0,10">
+
+                <Picker
+          Title="Страна"
+          WidthRequest="150"
+          ItemsSource="{Binding CountryList}"
+          SelectedItem="{Binding FilterCountry}" />
+
+                <Picker
+          Title="Климат"
+          WidthRequest="150"
+          ItemsSource="{Binding ClimateList}"
+          SelectedItem="{Binding FilterClimate}" />
+
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <HorizontalStackLayout Spacing="10">
+            <Entry
+        Placeholder="Мин. недель"
+        Keyboard="Numeric"
+        Text="{Binding FilterMinDuration, Mode=TwoWay}" />
+
+            <Entry
+        Placeholder="Макс. недель"
+        Keyboard="Numeric"
+        Text="{Binding FilterMaxDuration, Mode=TwoWay}" />
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10">
+            <Entry
+        Placeholder="Мин. цена"
+        Keyboard="Numeric"
+        Text="{Binding FilterMinPrice, Mode=TwoWay}" />
+
+            <Entry
+        Placeholder="Макс. цена"
+        Keyboard="Numeric"
+        Text="{Binding FilterMaxPrice, Mode=TwoWay}" />
+        </HorizontalStackLayout>
+
+        <Button
+      Text="Применить фильтры"
+      Command="{Binding ApplyFilterCommand}"
+      HorizontalOptions="Center" />
+
+        <CollectionView
+  ItemsSource="{Binding FilteredRoutes}"
+  Margin="0,10,0,0">
+
+            <!-- Здесь задаём отступ между элементами -->
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout
+      Orientation="Vertical"
+      ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame
-            Margin="5"
-            Padding="10"
-            HasShadow="True"
-            CornerRadius="8">
-                        <Grid>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                  Command="{Binding BindingContext.EditRouteCommand, 
-                                    Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                  CommandParameter="{Binding .}" />
-                            </Grid.GestureRecognizers>
-
-                            <Label FontSize="16">
+                    <Frame Margin="5" Padding="10" HasShadow="True" CornerRadius="8">
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Label Grid.Row="0" FontSize="16">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding Country}" FontAttributes="Bold"/>
@@ -36,13 +82,16 @@
                                         <Span Text="{Binding Hotel}"/>
                                         <Span Text=", "/>
                                         <Span Text="{Binding DurationWeeks}"/>
-                                        <Span Text=" нед."/>
-                                        <Span Text=", "/>
+                                        <Span Text=" нед., "/>
                                         <Span Text="{Binding Price, StringFormat='{}{0:C}'}"/>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
 
+                            <Label
+                                Grid.Row="1"
+                                FontSize="14"
+                                Text="{Binding Climate, StringFormat='Климат: {0}'}" />
                         </Grid>
                     </Frame>
                 </DataTemplate>

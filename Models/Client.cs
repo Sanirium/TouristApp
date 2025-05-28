@@ -14,6 +14,6 @@ public class Client
     public string Address { get; set; }
     public string Phone { get; set; }
 
-    [Ignore]
+    [SQLite.Ignore]
     public string FullName => $"{LastName} {FirstName} {MiddleName}".Trim();
 }

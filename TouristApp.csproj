@@ -62,6 +62,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="NUnit" Version="4.3.2" />
+		<PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="System.ObjectModel" Version="4.3.0" />
 	</ItemGroup>

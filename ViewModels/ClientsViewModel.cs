@@ -14,11 +14,28 @@ namespace TouristApp.ViewModels
         private readonly DatabaseService _db;
 
         public ObservableCollection<Client> Clients { get; } = new ObservableCollection<Client>();
+        private ObservableCollection<Client> _allClients = new ObservableCollection<Client>();
+        public ObservableCollection<Client> FilteredClients { get; } = new ObservableCollection<Client>();
+
+        private string _filterText;
+        public string FilterText
+        {
+            get => _filterText;
+            set
+            {
+                if (SetProperty(ref _filterText, value))
+                {
+                    ApplyFilter();
+                }
+            }
+        }
 
         public ICommand LoadClientsCommand { get; }
         public ICommand AddClientCommand { get; }
         public ICommand EditClientCommand { get; }
         public ICommand DeleteClientCommand { get; }
+        public ICommand ApplyFilterCommand { get; }
+        public bool IsBusy { get; private set; }
 
         public ClientsViewModel(DatabaseService db)
         {
@@ -41,14 +58,52 @@ namespace TouristApp.ViewModels
                 await _db.DeleteClientAsync(client);
                 await LoadClientsAsync();
             });
+
+            ApplyFilterCommand = new Command<string>(text =>
+            {
+                FilterText = text;
+            });
         }
 
         private async Task LoadClientsAsync()
         {
-            Clients.Clear();
+            IsBusy = true;
+
+            _allClients.Clear();
             var list = await _db.GetClientsAsync();
+
             foreach (var c in list)
-                Clients.Add(c);
+                _allClients.Add(c);
+
+            ApplyFilter();
+
+            IsBusy = false;
+        }
+
+        private void ApplyFilter()
+        {
+            FilteredClients.Clear();
+
+            if (string.IsNullOrWhiteSpace(FilterText))
+            {
+                foreach (var client in _allClients)
+                    FilteredClients.Add(client);
+            }
+            else
+            {
+                var lower = FilterText.Trim().ToLower();
+
+                var filtered = _allClients.Where(c =>
+                    (!string.IsNullOrEmpty(c.LastName) && c.LastName.ToLower().Contains(lower))
+                    || (!string.IsNullOrEmpty(c.FirstName) && c.FirstName.ToLower().Contains(lower))
+                    || (!string.IsNullOrEmpty(c.MiddleName) && c.MiddleName.ToLower().Contains(lower))
+                    || (!string.IsNullOrEmpty(c.Phone) && c.Phone.ToLower().Contains(lower))
+                    || (!string.IsNullOrEmpty(c.Address) && c.Address.ToLower().Contains(lower))
+                );
+
+                foreach (var client in filtered)
+                    FilteredClients.Add(client);
+            }
         }
     }
 }

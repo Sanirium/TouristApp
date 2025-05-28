@@ -17,13 +17,13 @@ public class Voucher
 
     public decimal DiscountPercent { get; set; }
 
-    [Ignore]
+    [SQLite.Ignore]
     public string ClientFullName { get; set; }
 
-    [Ignore]
+    [SQLite.Ignore]
     public string RouteCountry { get; set; }
 
-    [Ignore]
+    [SQLite.Ignore]
     public string DisplayInfo =>
             $"{ClientFullName}, {RouteCountry} {DepartureDate:dd.MM.yyyy}, {Quantity} шт., скидка {DiscountPercent}%";
 }
