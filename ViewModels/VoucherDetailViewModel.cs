@@ -96,12 +96,11 @@ namespace TouristApp.ViewModels
             {
                 if (SetProperty(ref _quantityText, value))
                 {
-                    if (int.TryParse(value, out var q))
+                    if (int.TryParse(value, out var q) && q >= 0)
                     {
                         Voucher.Quantity = q;
-                        var pct = _discountPolicy.GetDiscountPercent(q);
-                        Voucher.DiscountPercent = pct;
-                        _discountText = (pct * 100).ToString();
+                        Voucher.DiscountPercent = _discountPolicy.GetDiscountPercent(q);
+                        _discountText = (Voucher.DiscountPercent * 100).ToString("0");
                         OnPropertyChanged(nameof(DiscountText));
                     }
                 }
@@ -116,10 +115,9 @@ namespace TouristApp.ViewModels
             {
                 if (SetProperty(ref _discountText, value))
                 {
-                    if (decimal.TryParse(value, out var pct100))
+                    if (decimal.TryParse(value, out var pct100) && pct100 >= 0 && pct100 <= 100)
                     {
                         Voucher.DiscountPercent = pct100 / 100m;
-                        OnPropertyChanged(nameof(Voucher.DiscountPercent));
                     }
                 }
             }

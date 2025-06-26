@@ -5,104 +5,107 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Маршруты">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
 
-        <Button
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Button
       Text="Добавить маршрут"
       Command="{Binding AddRouteCommand}"
       HorizontalOptions="Center" />
 
-        <ScrollView Orientation="Horizontal">
-            <HorizontalStackLayout Spacing="10" Padding="0,10">
-                <Picker
+            <ScrollView Orientation="Horizontal">
+                <HorizontalStackLayout Spacing="10" Padding="0,10">
+                    <Picker
           Title="Страна"
           WidthRequest="150"
           ItemsSource="{Binding CountryList}"
           SelectedItem="{Binding FilterCountry}" />
-                <Picker
+                    <Picker
           Title="Климат"
           WidthRequest="150"
           ItemsSource="{Binding ClimateList}"
           SelectedItem="{Binding FilterClimate}" />
-            </HorizontalStackLayout>
-        </ScrollView>
+                </HorizontalStackLayout>
+            </ScrollView>
 
-        <HorizontalStackLayout Spacing="10">
-            <Entry
+            <HorizontalStackLayout Spacing="10">
+                <Entry
         Placeholder="Мин. недель"
         Keyboard="Numeric"
         Text="{Binding FilterMinDuration, Mode=TwoWay}" />
-            <Entry
+                <Entry
         Placeholder="Макс. недель"
         Keyboard="Numeric"
         Text="{Binding FilterMaxDuration, Mode=TwoWay}" />
-        </HorizontalStackLayout>
+            </HorizontalStackLayout>
 
-        <HorizontalStackLayout Spacing="10">
-            <Entry
+            <HorizontalStackLayout Spacing="10">
+                <Entry
         Placeholder="Мин. цена"
         Keyboard="Numeric"
         Text="{Binding FilterMinPrice, Mode=TwoWay}" />
-            <Entry
+                <Entry
         Placeholder="Макс. цена"
         Keyboard="Numeric"
         Text="{Binding FilterMaxPrice, Mode=TwoWay}" />
-        </HorizontalStackLayout>
+            </HorizontalStackLayout>
 
-        <Button
+            <Button
       Text="Применить фильтры"
       Command="{Binding ApplyFilterCommand}"
       HorizontalOptions="Center" />
 
-        <CollectionView
+            <CollectionView
       ItemsSource="{Binding FilteredRoutes}"
       Margin="0,10,0,0">
 
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout
           Orientation="Vertical"
           ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
+                </CollectionView.ItemsLayout>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
             Margin="5"
             Padding="10"
             HasShadow="True"
             CornerRadius="8">
 
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
                 Command="{Binding BindingContext.EditRouteCommand,
                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                 CommandParameter="{Binding .}" />
-                        </Frame.GestureRecognizers>
+                            </Frame.GestureRecognizers>
 
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
-                            <Label Grid.Row="0" FontSize="16">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding Country}" FontAttributes="Bold"/>
-                                        <Span Text=", "/>
-                                        <Span Text="{Binding Hotel}"/>
-                                        <Span Text=", "/>
-                                        <Span Text="{Binding DurationWeeks}"/>
-                                        <Span Text=" нед., "/>
-                                        <Span Text="{Binding Price, StringFormat='{}{0:C}'}"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0" FontSize="16">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Country}" FontAttributes="Bold"/>
+                                            <Span Text=", "/>
+                                            <Span Text="{Binding Hotel}"/>
+                                            <Span Text=", "/>
+                                            <Span Text="{Binding DurationWeeks}"/>
+                                            <Span Text=" нед., "/>
+                                            <Span Text="{Binding Price, StringFormat='{}{0:C}'}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                            <Label
+                                <Label
                 Grid.Row="1"
                 FontSize="14"
                 Text="{Binding Climate, StringFormat='Климат: {0}'}" />
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

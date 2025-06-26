@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Путёвки">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
+
+        <VerticalStackLayout Padding="20" Spacing="15">
 
         <Button
       Text="Добавить путёвку"
@@ -112,7 +114,7 @@
 
                             <Label
                 FontSize="14"
-                Text="{Binding DiscountPercent, StringFormat='Скидка: {0}%'}" />
+                Text="{Binding DiscountPercentDisplay, StringFormat='Скидка: {0}%'}" />
 
                             <Label
                 FontSize="14"
@@ -124,4 +126,5 @@
 
         </CollectionView>
     </VerticalStackLayout>
+        </ScrollView>
 </ContentPage>

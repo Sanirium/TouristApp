@@ -5,66 +5,69 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Клиенты">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
 
-        <Button
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Button
       Text="Добавить клиента"
       Command="{Binding AddClientCommand}"
       HorizontalOptions="Center" />
 
-        <SearchBar
+            <SearchBar
       Placeholder="Поиск клиента..."
       Text="{Binding FilterText}"
       SearchCommand="{Binding ApplyFilterCommand}"
       SearchCommandParameter="{Binding Text, Source={RelativeSource Self}}" />
 
-        <CollectionView
+            <CollectionView
       ItemsSource="{Binding FilteredClients}"
       Margin="0,10,0,0">
 
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
             Margin="5"
             Padding="10"
             HasShadow="True"
             CornerRadius="8">
 
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
                 Command="{Binding BindingContext.EditClientCommand,
                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                 CommandParameter="{Binding .}" />
-                        </Frame.GestureRecognizers>
+                            </Frame.GestureRecognizers>
 
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
 
-                            <Label Grid.Row="0" FontSize="16">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding LastName}" FontAttributes="Bold"/>
-                                        <Span Text=" "/>
-                                        <Span Text="{Binding FirstName}"/>
-                                        <Span Text=" "/>
-                                        <Span Text="{Binding MiddleName}"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
+                                <Label Grid.Row="0" FontSize="16">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding LastName}" FontAttributes="Bold"/>
+                                            <Span Text=" "/>
+                                            <Span Text="{Binding FirstName}"/>
+                                            <Span Text=" "/>
+                                            <Span Text="{Binding MiddleName}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                            <Label
+                                <Label
                 Grid.Row="1"
                 Text="{Binding Phone}"
                 FontSize="14" />
 
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

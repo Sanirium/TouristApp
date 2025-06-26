@@ -114,9 +114,10 @@ namespace TouristApp.ViewModels
                 if (v.DepartureDate < FilterFromDate || v.DepartureDate > FilterToDate)
                     continue;
 
-                if (minDisc > 0 && v.DiscountPercent < minDisc)
+                var discountPct = v.DiscountPercent * 100;
+                if (minDisc > 0 && discountPct < minDisc)
                     continue;
-                if (maxDisc > 0 && v.DiscountPercent > maxDisc)
+                if (maxDisc > 0 && discountPct > maxDisc)
                     continue;
 
                 if (minQty > 0 && v.Quantity < minQty)

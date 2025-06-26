@@ -27,5 +27,8 @@ public class Voucher
     public decimal RoutePrice { get; set; }
 
     [SQLite.Ignore]
-    public decimal TotalPrice => Math.Round(RoutePrice * Quantity * (1 - DiscountPercent / 100m), 2);
+    public decimal TotalPrice => Math.Round(RoutePrice * Quantity * (1 - DiscountPercent), 2);
+
+    [SQLite.Ignore]
+    public int DiscountPercentDisplay => (int)(DiscountPercent * 100);
 }
